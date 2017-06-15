@@ -61,9 +61,10 @@ public class Animal implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        throw new UnsupportedOperationException(
-                "Not implemented yet"
-        );
+        dest.writeLong(mId);
+        dest.writeString(mSpecies);
+        dest.writeInt(mAge);
+        dest.writeString(mName);
     }
 
     @Override
@@ -107,9 +108,12 @@ public class Animal implements Parcelable {
 
         @Override
         public Animal createFromParcel(Parcel source) {
-            throw new UnsupportedOperationException(
-                    "Not implemented yet"
-            );
+            Animal animal = new Animal();
+            animal.setId(source.readLong());
+            animal.setSpecies(source.readString());
+            animal.setAge(source.readInt());
+            animal.setName(source.readString());
+            return animal;
         }
 
         @Override

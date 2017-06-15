@@ -1,5 +1,7 @@
 package ru.sberbank.mobile.common.animal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -33,5 +35,14 @@ public class EntitiesGenerator {
         animal.setSpecies(createRandomString());
         animal.setAge(Math.abs(RANDOM.nextInt()));
         return animal;
+    }
+
+    public static List<Animal> createRandomAnimalsList(boolean includeId) {
+        List<Animal> animals = new ArrayList<>();
+        int size = 1 + RANDOM.nextInt(SIZE);
+        for (int i = 0; i < size; i++) {
+            animals.add(createRandomAnimal(includeId));
+        }
+        return animals;
     }
 }

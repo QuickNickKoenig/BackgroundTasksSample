@@ -21,7 +21,6 @@ public class AnimalParcelabilityTest {
         Parcel parcel = Parcel.obtain();
         try {
             Animal expected = EntitiesGenerator.createRandomAnimal(true);
-            Log.e("Test", "expected animal = "+expected);
             parcel.writeParcelable(expected, 0);
             parcel.setDataPosition(0);
 
