@@ -1,14 +1,14 @@
 package ru.sberbank.mobile.common.animal.db;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestName;
+import org.junit.rules.TestRule;
 
 import java.util.List;
 
@@ -23,50 +23,54 @@ import static org.junit.Assert.*;
 /**
  * Created by Тичер on 15.06.2017.
  */
-@RunWith(AndroidJUnit4.class)
 public class SQLiteAnimalsDaoTest {
 
-    private static final String TEST_NAME = "test.db";
+    private static final String TAG = "DaoTest";
 
-    private SQLiteAnimalsDao mSqliteAnimalsDao;
+    private AnimalsDaoRule mDaoRule = new AnimalsDaoRule();
+    private TestName mTestNameRule = new TestName();
+
+    @Rule
+    public TestRule rule = RuleChain
+            .outerRule(mDaoRule)
+            .around(mTestNameRule);
 
     @Before
-    public void setUp() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        mSqliteAnimalsDao = new SQLiteAnimalsDao(context, TEST_NAME,
-                SQLiteAnimalsDao.CURRENT_VERSION);
+    public void before() {
+        Log.e(TAG, "before");
     }
 
     @Test
     public void testInsertAnimal() {
+        Log.e(TAG, "method name = " + mTestNameRule.getMethodName());
         Animal animal = EntitiesGenerator.createRandomAnimal(false);
-        long id = mSqliteAnimalsDao.insertAnimal(animal);
+        long id = mDaoRule.getSqliteAnimalsDao().insertAnimal(animal);
         assertThat(true, is(id > 0));
     }
 
     @Test
     public void testGetAnimals() {
+        Log.e(TAG, "method name = " + mTestNameRule.getMethodName());
         List<Animal> expected = EntitiesGenerator.createRandomAnimalsList(false);
         for (Animal animal : expected) {
-            animal.setId(mSqliteAnimalsDao.insertAnimal(animal));
+            animal.setId(mDaoRule.getSqliteAnimalsDao().insertAnimal(animal));
         }
 
-        List<Animal> actual = mSqliteAnimalsDao.getAnimals();
+        List<Animal> actual = mDaoRule.getSqliteAnimalsDao().getAnimals();
         assertThat(actual, everyItem(isIn(expected)));
     }
 
     @Test
     public void testGetAnimalById() {
+        Log.e(TAG, "method name = " + mTestNameRule.getMethodName());
         Animal expected = EntitiesGenerator.createRandomAnimal(false);
-        long id = mSqliteAnimalsDao.insertAnimal(expected);
-        Animal actual = mSqliteAnimalsDao.getAnimalById(id);
+        long id = mDaoRule.getSqliteAnimalsDao().insertAnimal(expected);
+        Animal actual = mDaoRule.getSqliteAnimalsDao().getAnimalById(id);
         assertThat(actual, is(expected));
     }
 
     @After
-    public void tearDown() {
-        mSqliteAnimalsDao.close();
-        Context context = InstrumentationRegistry.getTargetContext();
-        context.deleteDatabase(TEST_NAME);
+    public void after() {
+        Log.e(TAG, "after");
     }
 }

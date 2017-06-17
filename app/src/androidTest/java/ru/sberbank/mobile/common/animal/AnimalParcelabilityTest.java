@@ -13,7 +13,6 @@ import static org.junit.Assert.*;
 /**
  * Created by Тичер on 15.06.2017.
  */
-@RunWith(AndroidJUnit4.class)
 public class AnimalParcelabilityTest {
 
     @Test
